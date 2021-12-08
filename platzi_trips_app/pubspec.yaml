@@ -22,6 +22,7 @@ dependencies:
   generic_bloc_provider: ^1.1.0
   firebase_auth: 
   firebase_storage: ^10.1.0
+  firebase_core: ^1.10.3
   cloud_firestore: ^3.1.0
   google_sign_in: ^5.2.1
 
