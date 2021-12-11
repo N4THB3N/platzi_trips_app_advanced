@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:platzi_trips_app/User/model/user.dart';
 import 'package:platzi_trips_app/widgets/gradient_back.dart';
 import 'package:platzi_trips_app/widgets/button_green.dart';
 import 'package:platzi_trips_app/User/bloc/bloc_user.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:platzi_trips_app/platzi_trips_cupertino.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -59,7 +60,13 @@ class _SignInScreen extends State<SignInScreen> {
                 ButtonGreen(
                   text: "Login with Gmail",
                   onPressed: () {
-                    userBloc.signIn();
+                    userBloc.signIn().then((auth.User user) {
+                      userBloc.updateUserData(User(
+                          uid: user.uid,
+                          name: user.displayName,
+                          email: user.email,
+                          photoURL: user.photoURL));
+                    });
                   },
                   width: 300.0,
                   heigth: 50.0,
