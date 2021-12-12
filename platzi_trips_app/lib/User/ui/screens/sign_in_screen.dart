@@ -16,11 +16,13 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreen extends State<SignInScreen> {
   UserBloc userBloc;
+  double screenWidht;
   AsyncSnapshot snapshot;
   double screenwith;
 
   @override
   Widget build(BuildContext context) {
+    screenWidht = MediaQuery.of(context).size.width;
     userBloc = BlocProvider.of(context);
     return _handleCurrentSession();
   }
@@ -45,18 +47,22 @@ class _SignInScreen extends State<SignInScreen> {
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          GradientBack("", null),
+          GradientBack(height: null),
           Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  "Welcome \n This is your Travel App",
-                  style: TextStyle(
-                      fontSize: 37.0,
-                      fontFamily: "Lato",
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                ),
+                Flexible(
+                    child: Container(
+                  width: screenwith,
+                  child: Text(
+                    "Welcome \n This is your Travel App",
+                    style: TextStyle(
+                        fontSize: 37.0,
+                        fontFamily: "Lato",
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )),
                 ButtonGreen(
                   text: "Login with Gmail",
                   onPressed: () {
