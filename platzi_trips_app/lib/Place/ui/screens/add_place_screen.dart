@@ -101,8 +101,61 @@ class _AddPlaceScreen extends State<AddPlaceScreen> {
                 Container(
                   width: 70.0,
                   child: ButtonPurple(
-                      buttonText: "Add Place",
-                      onPressed: () {
+                    buttonText: "Add Place",
+                    onPressed: () {
+                      userBloc.currentUser.then((User user) {
+                        if (user != null) {
+                          String uid = user.uid;
+                          String path = "$uid/${DateTime.now().toString()}.jpg";
+
+                          // Firebase storage
+
+                          userBloc
+                              .uploadFile(path, widget.image)
+                              .then((storageTask) {
+                            userBloc
+                                .updatePlaceData(Place(
+                                    name: _controllerTitlePlace.text,
+                                    description:
+                                        _controllerDescriptionPlace.text,
+                                    urlImage: "",
+                                    likes: 0))
+                                .whenComplete(() {
+                              print("Termino updatePlace");
+                              Navigator.pop(context);
+                            });
+
+                            /*storageTask.then((TaskSnapshot snapshot) {
+                              snapshot.ref.getDownloadURL().then((urlImage) {
+                                print("URL: " + urlImage);
+                                userBloc
+                                    .updatePlaceData(Place(
+                                        name: _controllerTitlePlace.text,
+                                        description:
+                                            _controllerDescriptionPlace.text,
+                                        urlImage: urlImage,
+                                        likes: 0))
+                                    .whenComplete(() {
+                                  print("Termino updatePlace");
+                                  Navigator.pop(context);
+                                });
+                              });
+                            });*/
+                          });
+                        }
+                      });
+                    },
+
+                    /*{
+                        //ID del usuario logeado actualmente
+                        userBloc.currentUser.then((User user) {
+                          if (user != null) {
+                            //1. Firebase Storage
+                            //url -
+
+                          }
+                        });
+
                         //2. Cloud Firestore
                         // Place - title, description, url, userOwner, likes
                         userBloc
@@ -115,7 +168,8 @@ class _AddPlaceScreen extends State<AddPlaceScreen> {
                           print("TERMINO");
                           Navigator.pop(context);
                         });
-                      }),
+                      }*/
+                  ),
                 )
               ],
             ),
