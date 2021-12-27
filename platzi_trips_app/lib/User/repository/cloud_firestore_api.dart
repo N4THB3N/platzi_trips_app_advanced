@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:platzi_trips_app/Place/model/place.dart';
+import 'package:platzi_trips_app/Place/ui/widgets/widgets/profile_place.dart';
 import 'package:platzi_trips_app/User/model/user.dart' as ModelUser;
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -31,8 +32,27 @@ class CloudFirestoreAPI {
       'name': place.name,
       'description': place.description,
       'likes': place.likes,
-      'userOwner': "$USERS/$user.uid",
-      "urlImage": place.urlImage //tipo de dato conocido como reference
+      "urlImage": place.urlImage,
+      'userOwner':
+          _db.doc("$USERS/$user.uid"), //tipo de dato conocido como reference
+    }).then((DocumentReference dr) {
+      dr.get().then((DocumentSnapshot snapshot) {
+        DocumentReference placeRef = snapshot.reference; // REFERENCIA ARRAY
+        DocumentReference refUsers = _db.collection(USERS).doc(user.uid);
+        refUsers.update({
+          'myPlaces': FieldValue.arrayUnion([placeRef])
+        });
+      });
+    });
+  }
+
+  List<ProfilePlace> buildPlaces(List<DocumentSnapshot> placesListSnapshot) {
+    List<ProfilePlace> profilePlaces = List<ProfilePlace>();
+    placesListSnapshot.forEach((p) {
+      profilePlaces.add(ProfilePlace(Place(
+          name: p["name"],
+          description: p['description'],
+          urlImage: p['urlImage'])));
     });
   }
 }
